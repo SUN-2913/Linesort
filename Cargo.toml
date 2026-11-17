@@ -1,0 +1,23 @@
+[package]
+name = "linesort"
+version = "1.0.1"
+edition = "2021"
+description = "Сортировка, дедупликация и очистка больших текстовых файлов (внешняя сортировка, ограниченная память)"
+license = "MIT"
+
+# Зависимостей нет: только стандартная библиотека.
+[dependencies]
+
+[profile.release]
+# Оптимизация скорости: LTO между крейтами не нужен (крейт один),
+# но codegen-units=1 даёт лучшую инлайн-развёртку горячих циклов.
+opt-level = 3
+codegen-units = 1
+lto = true
+panic = "abort"
+debug = false
+strip = true
+
+[[bin]]
+name = "linesort"
+path = "src/main.rs"

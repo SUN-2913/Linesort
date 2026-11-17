@@ -1,0 +1,10 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Рабочие каталоги linesort
+.linesort_tmp/
+
+# Служебное
+*.part
+.DS_Store

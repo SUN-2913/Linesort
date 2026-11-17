@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    name: ${{ matrix.os }} / Rust ${{ matrix.toolchain }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        toolchain: [stable]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Установка Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Сборка
+        run: cargo build --release --verbose
+
+      - name: Юнит-тесты
+        run: cargo test --release
+
+      - name: Функциональные тесты (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: bash test_linesort.sh target/release/linesort
+
+      - name: Функциональные тесты (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: bash test_linesort.sh target/release/linesort.exe
